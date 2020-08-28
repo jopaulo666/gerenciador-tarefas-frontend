@@ -1,0 +1,1 @@
+export const APP_NAME = "Gerenciador de Tarefas";
