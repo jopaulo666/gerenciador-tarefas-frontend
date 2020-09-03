@@ -8,34 +8,38 @@ class NavBar extends Component {
 
         this.state = {
             items: [
-                { name: "Listar Tarefas", href: "/" },
-                { name: "Nova Tarefa", href: "/form" }
+                { name: "Listar Tarefas", href: "/", active: true },
+                { name: "Nova Tarefa", href: "/form", active: false }
             ]
         }
+
+        this.onClickHandler = this.onClickHandler.bind(this);
     }
 
-    onClickHandler(item) {
-        alert(item.name)
+    onClickHandler(itemClicked) {
+        const items = [...this.state.items];
+
+        items.forEach(item => {
+            if (item.name === itemClicked.name) {
+                item.active = true;
+            } else {
+                item.active = false;
+            }
+        })
+
+        this.setState({items});
     }
 
     render() {
         return (
             <div>
-
-                <nav class="navbar navbar-expand-lg navbar navbar-dark bg-dark">
-                    <a class="navbar-brand" href="#">{APP_NAME}</a>
-                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Alterna navegação">
-                        <span class="navbar-toggler-icon"></span>
+                <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+                    <span className="navbar-brand mb-0 h1">{APP_NAME}</span>
+                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                        <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="#">Home <span class="sr-only">(Página atual)</span></a>
-                            </li>                   
-                           
-                        </ul>
-
-                        {this.state.items.map(i => <NavBarItem item={i} onClick={this.onClickHandler} />)}
+                    <div className="collapse navbar-collapse" id="navbarText">
+                        {this.state.items.map(i => <NavBarItem key={i.name} item={i} onClick={this.onClickHandler} />)}
                     </div>
                 </nav>
 
