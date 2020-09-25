@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import AuthService from '../api/AuthService';
 import Alert from './Alert';
+import { Redirect } from 'react-router-dom';
 
 class Login extends Component {
     constructor(props) {
@@ -10,17 +11,28 @@ class Login extends Component {
             username: "",
             password: "",
             alert: null,
-            processing: false
+            processing: false,
+            loggedIn: false
         }
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleInputChanged = this.handleInputChanged.bind(this);        
+        this.handleInputChanged = this.handleInputChanged.bind(this);     
+        this.handleLoginResponse = this.handleLoginResponse.bind(this);   
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        AuthService.login(this.state.username, this.state.password);
-        this.setState({alert: "Login inválido"});
+        AuthService.login(this.state.username, this.state.password, this.handleLoginResponse);
+        this.setState({processing: true});
+    }
+
+    handleLoginResponse(success) {
+        if (success) {
+            this.setState({loggedIn: true});
+        } else {
+            this.setState({alert: "Login inválido"});
+        }
+        this.setState({processing: false});
     }
 
     handleInputChanged(event) {
@@ -30,12 +42,16 @@ class Login extends Component {
     }
 
     render() {
+        if (this.state.loggedIn) {
+            return <Redirect to="/" />
+        } 
+
         return (
-            <div className="text-center">
-                <img className="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"></img>
-                <h1 className="h3 mb-3 font-weight-normal">Faça login</h1>
-                {this.state.alert !== null ? <Alert message={this.state.alert} /> : "" }
+            <div className="text-center">                
                 <form className="form-signin" onSubmit={this.handleSubmit}>
+                    <img className="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"></img>
+                    <h1 className="h3 mb-3 font-weight-normal">Faça login</h1>
+                    {this.state.alert !== null ? <Alert message={this.state.alert} /> : "" }
                     <div className="form-group">
                         <label className="sr-only" htmlFor="username">Usuário: </label>
                         <input 
