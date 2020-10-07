@@ -53,7 +53,7 @@ class Login extends Component {
         return (
             <div className="text-center">                
                 <form className="form-signin" onSubmit={this.handleSubmit}>
-                    <img className="mb-4" src="../../assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"></img>
+                    <img className="mb-4" src="/images/pngwing.com.png" alt="" width="72" height="72"></img>
                     <h1 className="h3 mb-3 font-weight-normal">Faça login</h1>
                     {this.state.alert !== null ? <Alert message={this.state.alert} /> : "" }
                     <div className="form-group">
@@ -81,7 +81,7 @@ class Login extends Component {
                         type="submit"
                         className="btn btn-lg btn-primary btn-block"
                         disabled={this.state.processing}>Login</button>
-                    <p className="mt-5 mb-3 text-muted">&copy; 2020</p>
+                    <p className="mt-5 mb-3 text-muted">&copy; 2020 - João Paulo da Mata Mendes</p>
                 </form>
                 
             </div>

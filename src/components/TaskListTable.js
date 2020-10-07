@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Redirect } from 'react-router-dom';
 import AuthService from '../api/AuthService';
 import Spinner from './Spinner';
+import Alert from './Alert'
 
 class TaskListTable extends Component {
     constructor(props) {
@@ -13,7 +14,8 @@ class TaskListTable extends Component {
         this.state = {
             tasks: [],
             editId: 0,
-            loading: false
+            loading: false,
+            alert: null
         }
 
         this.onDeleteHandler = this.onDeleteHandler.bind(this);
@@ -26,11 +28,23 @@ class TaskListTable extends Component {
     }
 
     listTasks(){
-        this.setState({tasks: TaskService.list()});
+        if (!AuthService.isAuthenticated()) {
+            return;
+        }
+
+        this.setState({ loading: true });
+        TaskService.list(
+            tasks => this.setState({ tasks: tasks, loading: false }),
+            error => this.setErrorState(error)
+        );
+    }
+
+    setErrorState(error) {
+        this.setState({ alert: `Erro na requisição: ${error.message}`, loading: false })
     }
 
     onDeleteHandler(id) {
-        if (window.confirm("Deseja realmente excluit essa tarefa?")) {
+        if (window.confirm("Deseja realmente excluir essa tarefa?")) {
             TaskService.delete(id);
             this.listTasks(); 
             toast.success("Tarefa excluída com sucesso!", {position: toast.POSITION.TOP_CENTER})
@@ -58,21 +72,24 @@ class TaskListTable extends Component {
 
         return (
             <>
-                {this.state.loading ? <Spinner /> :
+                <h1>Lista de Tarefas</h1>
+                { this.state.alert != null ? <Alert message={this.state.alert} /> : "" }
+                { this.state.loading ? <Spinner /> :
                     <table className="table table-striped">
-                        <TableHeader/>
-                        {this.state.tasks.length > 0 ?
+                        <TableHeader />
+                    
+                        {this.state.tasks.length > 0 ? 
                             <TableBody 
-                                tasks={this.state.tasks}
+                                tasks={this.state.tasks} 
                                 onDelete={this.onDeleteHandler}
                                 onEdit={this.onEditHandler}
-                                onStatusChange={this.onStatusChangeHandler}/>
+                                onStatusChange={this.onStatusChangeHandler} />
                             :
                             <EmptyTableBody />
                         }
                     </table>
-                }           
-                <ToastContainer autoClose={3000}/>
+                }
+                <ToastContainer autoClose={1500} />
             </>
         );
     }
