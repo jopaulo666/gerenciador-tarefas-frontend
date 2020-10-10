@@ -76,8 +76,7 @@ class TaskListTable extends Component {
                 { this.state.alert != null ? <Alert message={this.state.alert} /> : "" }
                 { this.state.loading ? <Spinner /> :
                     <table className="table table-striped">
-                        <TableHeader />
-                    
+                        <TableHeader />                    
                         {this.state.tasks.length > 0 ? 
                             <TableBody 
                                 tasks={this.state.tasks} 
@@ -89,7 +88,7 @@ class TaskListTable extends Component {
                         }
                     </table>
                 }
-                <ToastContainer autoClose={1500} />
+                <ToastContainer autoClose={2000} />
             </>
         );
     }
