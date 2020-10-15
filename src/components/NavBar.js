@@ -48,11 +48,16 @@ class NavBar extends Component {
                     <div className="collapse navbar-collapse" id="navbarText">
                         {this.state.items.map(i => <NavBarItem key={i.name} item={i} onClick={this.onClickHandler} />)}
                         
-                        {AuthService.isAuthenticated() ? 
-                        <NavBarItem item={{name: "Sair", active: false, href: "#"}} onClick={this.onLogoutHandler}/>
-                        : ""
-                    }
+                        
                     </div>
+                    <span className="navbar-text">
+                        {AuthService.isAuthenticated() ? `Olá, ${AuthService.getJWTTokenData().displayName}!` : ""}
+                    </span>
+                    
+                    {AuthService.isAuthenticated() ? 
+                            <NavBarItem item={{name: "Sair", active: false, href: "#"}} onClick={this.onLogoutHandler}/>
+                            : ""
+                        }
                 </nav>
 
             </div>
