@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import NavBarItem from './NavBarItem';
 import { APP_NAME } from '../constants';
+import AuthService from '../api/AuthService';
 
 class NavBar extends Component {
     constructor(props) {
@@ -40,6 +41,11 @@ class NavBar extends Component {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarText">
                         {this.state.items.map(i => <NavBarItem key={i.name} item={i} onClick={this.onClickHandler} />)}
+                        
+                        {AuthService.isAuthenticated() ? 
+                        <NavBarItem item={{name: "Sair", active: false, href: "#"}} />
+                        : ""
+                    }
                     </div>
                 </nav>
 

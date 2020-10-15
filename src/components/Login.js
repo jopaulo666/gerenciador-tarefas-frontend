@@ -17,23 +17,29 @@ class Login extends Component {
 
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChanged = this.handleInputChanged.bind(this);     
-        this.handleLoginResponse = this.handleLoginResponse.bind(this);   
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        AuthService.login(this.state.username, this.state.password, this.handleLoginResponse);
-        this.setState({processing: true});
+        AuthService.login(this.state.username, this.state.password,
+            success => {
+                if (success) {
+                    this.setState({ loggedIn: true});
+                    this.props.onLoginSuccess();
+                } else {
+                    this.setState({ alert: "Login inválido", processing: false });
+                }
+        });
     }
 
-    handleLoginResponse(success) {
+    /*handleLoginResponse(success) {
         if (success) {
             this.setState({loggedIn: true});
         } else {
             this.setState({alert: "Login inválido"});
         }
         this.setState({processing: false});
-    }
+    }*/
 
     handleInputChanged(event) {
         const field = event.target.name;
