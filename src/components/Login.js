@@ -24,22 +24,13 @@ class Login extends Component {
         AuthService.login(this.state.username, this.state.password,
             success => {
                 if (success) {
-                    this.setState({ loggedIn: true});
+                    this.setState({ loggedIn: true, processing: false});
                     this.props.onLoginSuccess();
                 } else {
                     this.setState({ alert: "Login inválido", processing: false });
                 }
         });
     }
-
-    /*handleLoginResponse(success) {
-        if (success) {
-            this.setState({loggedIn: true});
-        } else {
-            this.setState({alert: "Login inválido"});
-        }
-        this.setState({processing: false});
-    }*/
 
     handleInputChanged(event) {
         const field = event.target.name;
@@ -48,13 +39,9 @@ class Login extends Component {
     }
 
     render() {
-        if (AuthService.isAuthenticated()) {
+        if (AuthService.isAuthenticated() || this.state.loggedIn) {
             return <Redirect to="/" />
         }
-
-        if (this.state.loggedIn) {
-            return <Redirect to="/" />
-        } 
 
         return (
             <div className="text-center">                
