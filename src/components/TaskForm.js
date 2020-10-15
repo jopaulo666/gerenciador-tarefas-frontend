@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import TaskService from '../api/TaskService';
 import { Redirect } from 'react-router-dom';
 import AuthService from '../api/AuthService';
-//import Spinner from './Spinner';
+import Spinner from './Spinner';
 import Alert from './Alert';
 
 class TaskForm extends Component {
@@ -18,7 +18,8 @@ class TaskForm extends Component {
             redirect: false,
             butttonName: "Cadastrar",
             alert: null,
-            loading: false
+            loading: false,
+            saving: false
         }
 
         this.onSubmitHandler = this.onSubmitHandler.bind(this);
@@ -51,9 +52,9 @@ class TaskForm extends Component {
 
     onSubmitHandler(event) {
         event.preventDefault();
-
+        this.setState({saving: true});
         TaskService.save(this.state.task,
-            () => this.setState({redirect: true}),
+            () => this.setState({redirect: true, saving: false}),
             error => {
                 if (error.response) {
                     this.setErrorState(`Erro: ${error.response.data.error}` );
@@ -79,9 +80,9 @@ class TaskForm extends Component {
             return <Redirect to="/"/>
         }
 
-        /*if (this.state.load) {
+        if (this.state.loading) {
             return <Spinner />
-        }*/
+        }
 
         return (
             <div>
