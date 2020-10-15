@@ -36,10 +36,10 @@ class TaskForm extends Component {
                         if (error.response.status === 404) {
                             this.setErrorState("Tarefa não encontrada");
                         } else {
-                            this.setState(`Erro ao carregar dados: ${error.response}`);
+                            this.setErrorState(`Erro ao carregar dados: ${error.response}`);
                         }
                     } else {
-                        this.setState({alert: `Erro na requisiçãos: ${error.message}`, loading: false});
+                        this.setErrorState(`Erro na requisiçãos: ${error.message}`);
                     }
                 });
         }
@@ -51,8 +51,16 @@ class TaskForm extends Component {
 
     onSubmitHandler(event) {
         event.preventDefault();
-        TaskService.save(this.state.task);
-        this.setState({redirect: true});
+
+        TaskService.save(this.state.task,
+            () => this.setState({redirect: true}),
+            error => {
+                if (error.response) {
+                    this.setErrorState(`Erro: ${error.response.data.error}` );
+                } else {
+                    this.setErrorState(`Erro  requisiçãos: ${error.message}`);
+                }
+            })
     }
 
     onInputChangeHandler(event) {
